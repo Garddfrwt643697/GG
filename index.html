@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Gagarin Gastro Bar — Test</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;900&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background-color: #ffffff;
+      color: #000000;
+      font-family: 'Montserrat', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* --- 1. ПЕРВЫЙ ЭКРАН --- */
+    .hero {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      position: relative;
+      transition: opacity 0.5s ease, transform 0.5s ease, filter 0.5s ease;
+    }
+
+    /* Уменьшили размеры и убрали лишний размах */
+    .hero h1 {
+      font-size: 11vw; /* Было 16vw */
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: -0.03em;
+      line-height: 1;
+      color: #000;
+    }
+
+    .hero p {
+      font-size: 3vw; /* Было 3.5vw */
+      font-weight: 600;
+      letter-spacing: 0.4em; /* Уменьшили разрядку */
+      text-transform: uppercase;
+      color: #777;
+      margin-top: 12px;
+      margin-left: 0.4em; /* Только для компенсации отступа */
+    }
+
+    /* Класс для скролла */
+    .hero.scrolled {
+      opacity: 0;
+      transform: translateY(-40px) scale(0.85);
+      filter: blur(8px);
+    }
+
+    /* Индикатор скролла */
+    .scroll-hint {
+      position: absolute;
+      bottom: 40px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #aaa;
+      animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+      40% { transform: translateY(-8px); }
+      60% { transform: translateY(-4px); }
+    }
+
+    /* --- 2. КОНТЕНТ --- */
+    .content-section {
+      padding: 40px 20px 80px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .info-block {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    .info-block p {
+      font-size: 14px;
+      font-weight: 500;
+      color: #555;
+      margin: 8px 0;
+    }
+    .info-block a {
+      color: #000;
+      font-weight: 700;
+      text-decoration: none;
+      border-bottom: 2px solid #000;
+      padding-bottom: 2px;
+    }
+
+    .btn-menu {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      max-width: 340px;
+      padding: 18px;
+      background: #000;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 50px;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 40px;
+      transition: transform 0.2s ease, background 0.2s;
+    }
+    .btn-menu:active { transform: scale(0.96); background: #333; }
+
+    .review-title {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #999;
+      margin-bottom: 25px;
+    }
+
+    .icons-row {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      width: 100%;
+      max-width: 340px;
+    }
+    .icon-link {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-decoration: none;
+      color: #000;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: transform 0.2s ease;
+    }
+    .icon-link:active { transform: scale(0.9); }
+    .icon-wrap {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 2px solid #000;
+      margin-bottom: 12px;
+      background: #fff;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    .icon-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* --- 3. НИЖНИЙ БЛОК --- */
+    .footer-glow {
+      height: 80vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #fff;
+    }
+
+    .footer-glow h2 {
+      font-size: 14vw; /* Чуть уменьшил (было 18vw) */
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      color: #000;
+      opacity: 0.1;
+      transition: opacity 1s ease;
+    }
+
+    .footer-glow.active h2 {
+      animation: glowPulse 2s infinite alternate;
+    }
+
+    @keyframes glowPulse {
+      0% { opacity: 0.5; text-shadow: 0 0 10px rgba(0,0,0,0.1), 0 0 20px rgba(0,0,0,0.1); }
+      100% { opacity: 1; text-shadow: 0 0 20px rgba(0,0,0,0.3), 0 0 60px rgba(0,0,0,0.3); }
+    }
+  </style>
+</head>
+<body>
+
+  <section class="hero" id="hero">
+    <h1>Gagarin</h1>
+    <p>Gastro Bar</p>
+    <div class="scroll-hint">Листай вниз ↓</div>
+  </section>
+
+  <section class="content-section">
+    <div class="info-block">
+      <p>📍 ул. Возрождения, 27, Вологда</p>
+      <p>📞 <a href="tel:+78172507450">+7 (8172) 50-74-50</a></p>
+    </div>
+
+    <a href="https://foodeon.com/venue/gagarin-gastro-bar-slqs" target="_blank" class="btn-menu">
+      🍽️ Посмотреть меню
+    </a>
+
+    <div class="review-title">Оставьте отзыв</div>
+
+    <div class="icons-row">
+      <a href="https://yandex.ru/maps/org/gagarin_gastro_bar/37738191246/" target="_blank" class="icon-link">
+        <div class="icon-wrap">
+          <img src="яндекс.jpg" alt="Яндекс" onerror="this.style.display='none'" />
+        </div>
+        Яндекс
+      </a>
+      
+      <a href="https://go.2gis.com/1yZ9V" target="_blank" class="icon-link">
+        <div class="icon-wrap">
+          <img src="2ГИС.jpg" alt="2ГИС" onerror="this.style.display='none'" />
+        </div>
+        2ГИС
+      </a>
+    </div>
+  </section>
+
+  <section class="footer-glow" id="footerGlow">
+    <h2>Gagarin</h2>
+  </section>
+
+  <script>
+    const hero = document.getElementById('hero');
+    const footerGlow = document.getElementById('footerGlow');
+
+    window.addEventListener('scroll', () => {
+      let scrollY = window.scrollY;
+      if (scrollY > 50) {
+        hero.classList.add('scrolled');
+      } else {
+        hero.classList.remove('scrolled');
+      }
+    });
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          footerGlow.classList.add('active');
+        } else {
+          footerGlow.classList.remove('active');
+        }
+      });
+    }, { threshold: 0.3 });
+
+    observer.observe(footerGlow);
+  </script>
+
+</body>
+</html>
