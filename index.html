@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Gagarin Gastro Bar — Test</title>
+  <title>Gagarin Gastro Bar</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;900&display=swap');
 
@@ -15,51 +15,108 @@
       font-family: 'Montserrat', sans-serif;
       -webkit-font-smoothing: antialiased;
       overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
-    /* --- 1. ПЕРВЫЙ ЭКРАН --- */
+    /* --- 1. ПЕРВЫЙ ЭКРАН С АНИМАЦИЕЙ --- */
     .hero {
-      height: 100vh;
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       text-align: center;
       position: relative;
-      transition: opacity 0.5s ease, transform 0.5s ease, filter 0.5s ease;
+      padding: 20px;
     }
 
-    /* Уменьшили размеры и убрали лишний размах */
+    .hero-text-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+    }
+
+    .title-container {
+      transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+      transform-origin: center;
+      position: relative;
+    }
+
+    .title-container.pulse {
+      transform: scale(1.12);
+    }
+
     .hero h1 {
-      font-size: 11vw; /* Было 16vw */
+      font-size: 18vw;
       font-weight: 900;
       text-transform: uppercase;
-      letter-spacing: -0.03em;
-      line-height: 1;
+      letter-spacing: -0.04em;
+      line-height: 0.85;
       color: #000;
+      display: flex;
+      justify-content: center;
+      position: relative;
     }
 
-    .hero p {
-      font-size: 3vw; /* Было 3.5vw */
-      font-weight: 600;
-      letter-spacing: 0.4em; /* Уменьшили разрядку */
-      text-transform: uppercase;
-      color: #777;
-      margin-top: 12px;
-      margin-left: 0.4em; /* Только для компенсации отступа */
+    /* Обертка для каждой буквы, чтобы сделать вспышку */
+    .hero h1 span {
+      display: inline-block;
+      position: relative;
+      transition: opacity 0.3s ease, filter 0.3s ease;
     }
 
-    /* Класс для скролла */
-    .hero.scrolled {
+    /* Эффект вспышки на буквах (класс добавляется через JS) */
+    .hero h1 span.flash::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.8) 50%, transparent 70%);
+      background-size: 200% 100%;
+      animation: flashEffect 0.6s ease-out forwards;
+      pointer-events: none;
+      mix-blend-mode: overlay; /* Светлый эффект */
+    }
+
+    @keyframes flashEffect {
+      0% { background-position: 100% 0; opacity: 1; }
+      100% { background-position: -100% 0; opacity: 0; }
+    }
+
+    .hero h1 span.fade-out {
       opacity: 0;
-      transform: translateY(-40px) scale(0.85);
       filter: blur(8px);
     }
 
-    /* Индикатор скролла */
+    .gastro-wrap {
+      transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+      transform-origin: center;
+      display: flex;
+      justify-content: flex-end;
+      width: 100%;
+      padding-right: 5vw;
+      margin-top: 10px;
+    }
+
+    .gastro-wrap.pulse-small {
+      transform: scale(1.15);
+    }
+
+    .gastro-bar {
+      font-size: 3.5vw;
+      font-weight: 600;
+      letter-spacing: 0.5em;
+      text-transform: uppercase;
+      color: #777;
+      text-align: right;
+      margin-right: 0.5em;
+    }
+
     .scroll-hint {
       position: absolute;
-      bottom: 40px;
+      bottom: 30px;
       font-size: 11px;
       font-weight: 600;
       letter-spacing: 2px;
@@ -74,193 +131,276 @@
       60% { transform: translateY(-4px); }
     }
 
-    /* --- 2. КОНТЕНТ --- */
+    /* --- 2. КОНТЕНТ (КИБЕРПАНК КНОПКИ) --- */
     .content-section {
-      padding: 40px 20px 80px;
+      padding: 40px 20px 60px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      min-height: 100vh;
-    }
-
-    .info-block {
-      text-align: center;
-      margin-bottom: 40px;
-    }
-    .info-block p {
-      font-size: 14px;
-      font-weight: 500;
-      color: #555;
-      margin: 8px 0;
-    }
-    .info-block a {
-      color: #000;
-      font-weight: 700;
-      text-decoration: none;
-      border-bottom: 2px solid #000;
-      padding-bottom: 2px;
-    }
-
-    .btn-menu {
-      display: flex;
-      justify-content: center;
-      align-items: center;
       width: 100%;
-      max-width: 340px;
-      padding: 18px;
-      background: #000;
-      color: #fff;
+      max-width: 400px;
+    }
+
+    /* Контейнер кнопки */
+    .cyber-btn-wrapper {
+      width: 100%;
+      margin-bottom: 24px;
+      position: relative;
+    }
+
+    /* Уголки */
+    .cyber-corner {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      pointer-events: none;
+      z-index: 2;
+      transition: all 0.3s ease;
+      opacity: 0; /* Скрыты по умолчанию, управляются JS */
+    }
+    
+    /* Верхний левый */
+    .corner-tl { top: -4px; left: -4px; border-top: 2px solid #000; border-left: 2px solid #000; }
+    /* Верхний правый */
+    .corner-tr { top: -4px; right: -4px; border-top: 2px solid #000; border-right: 2px solid #000; }
+    /* Нижний левый */
+    .corner-bl { bottom: -4px; left: -4px; border-bottom: 2px solid #000; border-left: 2px solid #000; }
+    /* Нижний правый */
+    .corner-br { bottom: -4px; right: -4px; border-bottom: 2px solid #000; border-right: 2px solid #000; }
+
+    /* Кнопка */
+    .cyber-btn {
+      display: block;
+      width: 100%;
+      padding: 16px 20px;
+      background-color: #ffffff;
+      color: #000000;
       text-decoration: none;
-      border-radius: 50px;
       font-size: 14px;
       font-weight: 700;
-      letter-spacing: 1.5px;
+      letter-spacing: 2px;
       text-transform: uppercase;
-      margin-bottom: 40px;
-      transition: transform 0.2s ease, background 0.2s;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+      border: 1px solid #000;
+      transition: background-color 0.1s, color 0.1s, box-shadow 0.3s;
+      /* Эффект глитча при нажатии */
+      overflow: hidden;
     }
-    .btn-menu:active { transform: scale(0.96); background: #333; }
 
+    /* Свечение обводки (мерцание) */
+    @keyframes borderFlicker {
+      0%, 100% { box-shadow: 0 0 0px rgba(0,0,0,0); }
+      5% { box-shadow: 0 0 10px rgba(0,0,0,0.2); }
+      10% { box-shadow: 0 0 0px rgba(0,0,0,0); }
+      50% { box-shadow: 0 0 15px rgba(0,0,0,0.1); }
+      55% { box-shadow: 0 0 0px rgba(0,0,0,0); }
+    }
+
+    .cyber-btn {
+      animation: borderFlicker 4s infinite;
+    }
+    .cyber-btn-wrapper:nth-child(2) .cyber-btn { animation-delay: 1s; }
+    .cyber-btn-wrapper:nth-child(3) .cyber-btn { animation-delay: 2s; }
+
+    /* Нажатие (инверсия + вспышка) */
+    .cyber-btn:active {
+      background-color: #000;
+      color: #fff;
+      box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    }
+
+    /* Глитч-эффект при нажатии */
+    .cyber-btn::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 50%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+      transform: skewX(-25deg);
+      transition: left 0.5s;
+    }
+    .cyber-btn:active::before {
+      left: 150%;
+    }
+
+    /* --- 3. ИНФО-БЛОК --- */
     .review-title {
       font-size: 12px;
       font-weight: 700;
       letter-spacing: 3px;
       text-transform: uppercase;
       color: #999;
-      margin-bottom: 25px;
+      margin-top: 20px;
+      margin-bottom: 20px;
     }
 
-    .icons-row {
-      display: flex;
-      justify-content: center;
-      gap: 40px;
-      width: 100%;
-      max-width: 340px;
+    .info-block {
+      text-align: center;
+      margin-top: 40px;
+      margin-bottom: 40px;
+      padding-top: 20px;
+      border-top: 1px solid #eee;
+      width: 80%;
     }
-    .icon-link {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-decoration: none;
+    .info-block p {
+      font-size: 13px;
+      font-weight: 500;
+      color: #555;
+      margin: 8px 0;
+      letter-spacing: 0.5px;
+    }
+    .info-block a {
       color: #000;
-      font-size: 12px;
       font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      transition: transform 0.2s ease;
-    }
-    .icon-link:active { transform: scale(0.9); }
-    .icon-wrap {
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-      overflow: hidden;
-      border: 2px solid #000;
-      margin-bottom: 12px;
-      background: #fff;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    }
-    .icon-wrap img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
+      text-decoration: none;
+      border-bottom: 1px solid #ccc;
+      transition: border-color 0.2s;
     }
 
-    /* --- 3. НИЖНИЙ БЛОК --- */
-    .footer-glow {
-      height: 80vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: #fff;
-    }
-
-    .footer-glow h2 {
-      font-size: 14vw; /* Чуть уменьшил (было 18vw) */
-      font-weight: 900;
-      text-transform: uppercase;
-      letter-spacing: 0.03em;
-      color: #000;
-      opacity: 0.1;
-      transition: opacity 1s ease;
-    }
-
-    .footer-glow.active h2 {
-      animation: glowPulse 2s infinite alternate;
-    }
-
-    @keyframes glowPulse {
-      0% { opacity: 0.5; text-shadow: 0 0 10px rgba(0,0,0,0.1), 0 0 20px rgba(0,0,0,0.1); }
-      100% { opacity: 1; text-shadow: 0 0 20px rgba(0,0,0,0.3), 0 0 60px rgba(0,0,0,0.3); }
-    }
   </style>
 </head>
 <body>
 
   <section class="hero" id="hero">
-    <h1>Gagarin</h1>
-    <p>Gastro Bar</p>
+    <div class="hero-text-wrap">
+      <div class="title-container" id="titleContainer">
+        <h1 id="main-title">
+          <span>G</span><span>a</span><span>g</span><span>a</span><span>r</span><span>i</span><span>n</span>
+        </h1>
+      </div>
+      <div class="gastro-wrap" id="gastroWrap">
+        <p class="gastro-bar">Gastro Bar</p>
+      </div>
+    </div>
     <div class="scroll-hint">Листай вниз ↓</div>
   </section>
 
   <section class="content-section">
+    
+    <!-- Кнопка Меню -->
+    <div class="cyber-btn-wrapper">
+      <div class="cyber-corner corner-tl"></div>
+      <div class="cyber-corner corner-tr"></div>
+      <div class="cyber-corner corner-bl"></div>
+      <div class="cyber-corner corner-br"></div>
+      <a href="https://foodeon.com/venue/gagarin-gastro-bar-slqs" target="_blank" class="cyber-btn">
+        [ Посмотреть меню ]
+      </a>
+    </div>
+
+    <div class="review-title">Оставьте отзыв</div>
+
+    <!-- Кнопка Яндекс -->
+    <div class="cyber-btn-wrapper">
+      <div class="cyber-corner corner-tl"></div>
+      <div class="cyber-corner corner-tr"></div>
+      <div class="cyber-corner corner-bl"></div>
+      <div class="cyber-corner corner-br"></div>
+      <a href="https://yandex.ru/maps/org/gagarin_gastro_bar/37738191246/" target="_blank" class="cyber-btn">
+        Яндекс Карты
+      </a>
+    </div>
+
+    <!-- Кнопка 2ГИС -->
+    <div class="cyber-btn-wrapper">
+      <div class="cyber-corner corner-tl"></div>
+      <div class="cyber-corner corner-tr"></div>
+      <div class="cyber-corner corner-bl"></div>
+      <div class="cyber-corner corner-br"></div>
+      <a href="https://go.2gis.com/1yZ9V" target="_blank" class="cyber-btn">
+        2ГИС
+      </a>
+    </div>
+
+    <!-- Инфо-блок -->
     <div class="info-block">
       <p>📍 ул. Возрождения, 27, Вологда</p>
       <p>📞 <a href="tel:+78172507450">+7 (8172) 50-74-50</a></p>
     </div>
 
-    <a href="https://foodeon.com/venue/gagarin-gastro-bar-slqs" target="_blank" class="btn-menu">
-      🍽️ Посмотреть меню
-    </a>
-
-    <div class="review-title">Оставьте отзыв</div>
-
-    <div class="icons-row">
-      <a href="https://yandex.ru/maps/org/gagarin_gastro_bar/37738191246/" target="_blank" class="icon-link">
-        <div class="icon-wrap">
-          <img src="яндекс.jpg" alt="Яндекс" onerror="this.style.display='none'" />
-        </div>
-        Яндекс
-      </a>
-      
-      <a href="https://go.2gis.com/1yZ9V" target="_blank" class="icon-link">
-        <div class="icon-wrap">
-          <img src="2ГИС.jpg" alt="2ГИС" onerror="this.style.display='none'" />
-        </div>
-        2ГИС
-      </a>
-    </div>
-  </section>
-
-  <section class="footer-glow" id="footerGlow">
-    <h2>Gagarin</h2>
   </section>
 
   <script>
-    const hero = document.getElementById('hero');
-    const footerGlow = document.getElementById('footerGlow');
+    const letters = document.querySelectorAll('#main-title span');
+    const titleContainer = document.getElementById('titleContainer');
+    const gastroWrap = document.getElementById('gastroWrap');
+    const corners = document.querySelectorAll('.cyber-corner');
 
-    window.addEventListener('scroll', () => {
-      let scrollY = window.scrollY;
-      if (scrollY > 50) {
-        hero.classList.add('scrolled');
-      } else {
-        hero.classList.remove('scrolled');
+    const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+    // --- ЛОГИКА АНИМАЦИИ ТЕКСТА ---
+    async function runAnimationCycle() {
+      for (let i = 0; i < letters.length; i++) {
+        letters[i].classList.add('fade-out');
+        await wait(120); 
       }
-    });
+      await wait(300);
+      
+      letters.forEach(letter => letter.classList.remove('fade-out'));
+      await wait(100);
 
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          footerGlow.classList.add('active');
+      titleContainer.classList.add('pulse');
+      await wait(600);
+      titleContainer.classList.remove('pulse');
+      await wait(600);
+
+      await wait(3000); // Пауза 3 сек
+
+      titleContainer.classList.add('pulse');
+      await wait(600);
+      titleContainer.classList.remove('pulse');
+
+      await wait(200);
+      gastroWrap.classList.add('pulse-small');
+      await wait(600);
+      gastroWrap.classList.remove('pulse-small');
+
+      await wait(1000);
+      runAnimationCycle();
+    }
+
+    // --- ЛОГИКА ВСПЫШКИ СВЕТА НА БУКВАХ (Раз в 5 секунд) ---
+    async function runFlash() {
+      while(true) {
+        await wait(5000); // Ждем 5 секунд
+        letters.forEach((letter, index) => {
+          // Добавляем класс с задержкой для каждой буквы, чтобы свет бежал слева направо
+          setTimeout(() => {
+            letter.classList.add('flash');
+            setTimeout(() => letter.classList.remove('flash'), 600);
+          }, index * 50);
+        });
+      }
+    }
+
+    // --- ЛОГИКА РАНДОМНЫХ УГОЛКОВ КНОПОК ---
+    function randomizeCorners() {
+      corners.forEach(corner => {
+        // С вероятностью 50% уголок показывается
+        if (Math.random() > 0.5) {
+          corner.style.opacity = '1';
+          // С вероятностью 20% уголок становится более ярким
+          if (Math.random() > 0.8) {
+            corner.style.transform = 'scale(1.2)';
+            corner.style.borderColor = '#000';
+          } else {
+            corner.style.transform = 'scale(1)';
+            corner.style.borderColor = '#ccc'; // Полупрозрачный цвет
+          }
         } else {
-          footerGlow.classList.remove('active');
+          corner.style.opacity = '0';
         }
       });
-    }, { threshold: 0.3 });
+    }
 
-    observer.observe(footerGlow);
+    // Запускаем цикл угоkов каждые 800мс
+    setInterval(randomizeCorners, 800);
+
+    // Запуск всего
+    runAnimationCycle();
+    runFlash();
   </script>
 
 </body>
